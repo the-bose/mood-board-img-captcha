@@ -22,8 +22,12 @@ def createCollage(img, size, bgc=(255,255,255)):
     collage=Image.new('RGB',(nWidth,nHeight),color=bgc)
 
     for ind,i in enumerate(img):
-        offset=randint(-50,50)
-        x=y=max([nWidth,nHeight])
+        max_dim=max([nWidth,nHeight])
+        offset_param=int(max_dim/3)
+        offset=randint(-offset_param,offset_param)
+        # Old offset. Fits all images within canvas
+        # offset=randint(-50,50)
+        x=y=max_dim
         #Fit in canvas
         while (x+i.size[0])>collage.size[0] or (y+i.size[1])>collage.size[1]:
             x=randint(0,nWidth)
