@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Moodboard generator</title>
+	<link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js" crossorigin="anonymous"></script>
+    </head>
+    <body class="bg-primary">
+        <div id="layoutAuthentication">
+            <div id="layoutAuthentication_content">
+                <main>
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-7">
+                                <div class="card shadow-lg border-0 rounded-lg mt-5">
+                                    <div class="card-header"><h3 class="text-center font-weight-light my-4">Captcha</h3></div>
+                                    <div class="card-body">
+                                        <form action="/generate" method="POST">
+                                            <div class="form-row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label class="small mb-1" for="inputFirstName">ENTER QUERY</label>
+                                                        <input class="form-control py-4" id="query" name="query" type="text" placeholder="Enter query eg:happy" />
+                                                    </div>
+                                                </div>
+                                              <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label class="small mb-1" for="inputLastName">ENTER API KEY</label>
+                                                        <input class="form-control py-4" id="key" name="key" type="text" placeholder="Enter key" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="quantity">NUMBER OF IMAGES </label>
+                                                <input type="number" id="count" name="count" min="1" max="10">
+                                            </div>
+
+                                            <div class="form-row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label class="small mb-1" for="inputPassword">BACKROUND COLOR</label>
+                                                        <input class="form-control py-4" id="bgc" name="bgc" type="color" />
+                                                    </div>
+                                                </div>
+                                            </div>
+					    <!--<div class="form-group mt-4 mb-0"><a class="btn btn-primary btn-block" id="subbtn">SUBMIT</a></div>-->
+                                            <div class="form-group mt-4 mb-0"><button class="btn btn-primary btn-block">SUBMIT</button></div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+			<div id="resBlock">
+			</div>
+                    </div>
+                </main>
+            </div>
+	    <!--
+            <div id="layoutAuthentication_footer">
+                <footer class="py-4 bg-light mt-auto">
+                    <div class="container-fluid">
+                        <div class="d-flex align-items-center justify-content-between small">
+                            <div class="text-muted">Copyright &copy; Your Website 2020</div>
+                            <div>
+                                <a href="#">Privacy Policy</a>
+                                &middot;
+                                <a href="#">Terms &amp; Conditions</a>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+	    -->
+        </div>
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+        <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			function sendAPI(url) {
+			    var query = $('#query').val();
+			    var key = $('#key').val();
+			    var count = $('#count').val();
+			    var bgc = $('#bgc').val();
+			    var sendData =  {
+				query: query,
+				key: key,
+				count: count,
+				bgc: bgc
+			    }
+			    console.log(sendData);
+			    $.ajax({
+				crossOrigin: true,
+				url: url,
+				type: "post",
+				contentType: "application/json; charset=UTF-8",
+				dataType:'json',
+				data: JSON.stringify(sendData),
+				success: function(result){
+				    console.log("SUCCESS", result);
+				    $("#resBlock").html("");
+				    $("#resBlock").append(`<img src="data:image/png;base64,${result}" />`);
+				}
+			    });
+			}
+
+			// Handle API
+			$("#subbtn").on("click", () => {sendAPI("/generate")});
+		})
+	</script>
+    </body>
+</html>

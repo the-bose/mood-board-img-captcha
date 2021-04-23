@@ -10,6 +10,10 @@ app.config['SECRET KEY'] = '3E8FBFF793F7FAF1E194288542CBA'
 def home():
     return render_template("index.html")
 
+@app.route("/captcha")
+def captcha():
+    return render_template("captcha.html")
+
 @app.route("/generate", methods=['GET', 'POST'])
 def generate():
     inputs = request.form
