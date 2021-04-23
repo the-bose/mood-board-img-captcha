@@ -33,10 +33,11 @@ def createCollage(img, size, bgc=(255,255,255)):
     return collage
 
 # Exposed endpoint to start the creation of collage
-def generate(query, count, colour=None):
+def generate_coll(query, count, colour=None):
     img = []
     size = []
 
+    # Request data to fetch images
     r = requests.get("https://customsearch.googleapis.com/customsearch/v1",
         params={
             'key': 'AIzaSyAlSxpfMPROMhfmx92tZZgnh_YwuOVd7gU ',

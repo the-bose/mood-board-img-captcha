@@ -1,3 +1,5 @@
 venv/
 src/
 tests/
+__pycache__/
+outputs/*.jpg
