@@ -16,7 +16,7 @@ def captcha():
 
 @app.route("/generate", methods=['GET', 'POST'])
 def generate():
-    inputs = request.form
+    inputs = request.form if request.json is None else request.json
     print(inputs)
     query = inputs["query"]
     key = inputs["key"]
