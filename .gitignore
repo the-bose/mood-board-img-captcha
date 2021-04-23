@@ -2,4 +2,4 @@ venv/
 src/
 tests/
 __pycache__/
-outputs/*.jpg
+static/outputs/*.jpg
