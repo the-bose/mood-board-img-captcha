@@ -7,6 +7,8 @@ from urllib.request import Request, urlopen
 from uuid import uuid4
 from random import randint
 import random
+from io import BytesIO
+import base64
 
 #GLOBALS
 headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36'}
@@ -70,6 +72,10 @@ def generate_coll(query, count, colour=None):
     clg = createCollage(img,size,colour)
     # clg.show()
     filename = f"{uuid4().hex}.jpg"
+    buffered = BytesIO()
     clg.save(f'./static/outputs/{filename}')
+    clg.save(buffered, format='JPEG')
+    b64_bytes = base64.b64encode(buffered.getvalue())
+    b64_str = b64_bytes.decode('ascii')
 
-    return filename
+    return (filename, b64_str)

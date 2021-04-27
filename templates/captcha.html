@@ -9,6 +9,17 @@
         <title>Moodboard generator</title>
 	<link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js" crossorigin="anonymous"></script>
+	<style type="text/css">
+		   img{
+			max-width: 100%;
+			max-height: 100%;
+			display: block; /* remove extra space below image */
+		    }
+		    .imgBlock{
+			width: 250px;
+			border: 5px solid black;
+		    }
+	</style>
     </head>
     <body class="bg-primary">
         <div id="layoutAuthentication">
@@ -19,33 +30,36 @@
                             <div class="col-lg-7">
                                 <div class="card shadow-lg border-0 rounded-lg mt-5">
                                     <div class="card-header"><h3 class="text-center font-weight-light my-4">Captcha</h3></div>
+				    <div id="imgBlock">
+					    <img src="https://wpamelia.com/wp-content/uploads/2018/11/ezgif-2-6d0b072c3d3f.gif" />
+				    </div>
                                     <div class="card-body">
                                         <form action="/generate" method="POST">
                                             <div class="form-row">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <button class="btn btn-primary btn-block">Select A</button>
+                                                        <button class="btn btn-primary btn-block" id="opt1">Select A</button>
                                                        <!-- <label class="small mb-1" for="inputFirstName">ENTER QUERY</label>
                                                         <input class="form-control py-4" id="query" name="query" type="text" placeholder="Enter query eg:happy" />-->
                                                     </div>
                                                 </div>
                                               <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <button class="btn btn-primary btn-block">Select B</button>
+                                                        <button class="btn btn-primary btn-block" id="opt2">Select B</button>
                                                         <!--<label class="small mb-1" for="inputLastName">ENTER API KEY</label>
                                                         <input class="form-control py-4" id="key" name="key" type="text" placeholder="Enter key" />-->
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <button class="btn btn-primary btn-block">Select C</button>
+                                                        <button class="btn btn-primary btn-block" id="opt3">Select C</button>
                                                        <!-- <label class="small mb-1" for="inputFirstName">ENTER QUERY</label>
                                                         <input class="form-control py-4" id="query" name="query" type="text" placeholder="Enter query eg:happy" />-->
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <button class="btn btn-primary btn-block">Select D</button>
+                                                        <button class="btn btn-primary btn-block" id="opt4">Select D</button>
                                                        <!-- <label class="small mb-1" for="inputFirstName">ENTER QUERY</label>
                                                         <input class="form-control py-4" id="query" name="query" type="text" placeholder="Enter query eg:happy" />-->
                                                     </div>
@@ -76,7 +90,7 @@
                     </div>
                 </main>
             </div>
-	    
+
             <div id="layoutAuthentication_footer">
                 <footer class="py-4 bg-light mt-auto">
                     <div class="container-fluid">
@@ -98,35 +112,57 @@
         <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
 	<script type="text/javascript">
 		$(document).ready(function(){
-			function sendAPI(url) {
-			    var query = $('#query').val();
-			    var key = $('#key').val();
-			    var count = $('#count').val();
-			    var bgc = $('#bgc').val();
+			var keywords = ["dogs", "cats", "mountains", "kayak", "cycling", "traffic lights", "happy", "drum kit", "constructivism", "melancholy"];
+			var colours = ["#CE3535", "#CEB635", "#12E11A", "#31C1E6", "#E63150", "#CB1499", "#E36D24", "#3724E3"];
+			var c_opt;
+
+			function setOptions(answer) {
+				let false_ans = []
+				c_opt = Math.floor(Math.random() * 4) + 1;
+				while (false_ans.length < 3) {
+					let o = keywords[Math.floor(Math.random() * keywords.length)];
+					if (o !== answer && false_ans.indexOf(o) === -1)
+						false_ans.push(o);
+				}
+				// Filling options
+				$(`#opt${c_opt}`).text(answer);
+				for (let i=1; i<=4; i++) {
+					if (i != c_opt) {
+						$(`#opt${i}`).text(false_ans.pop());
+					}
+				}
+			}
+
+			function grabImage() {
+			    let keyword = keywords[Math.floor(Math.random() * keywords.length)];
+			    let colour = colours[Math.floor(Math.random() * colours.length)];
+			    var query = keyword;
+			    var key = "key";
+			    var count = Math.floor(Math.random() * 7) + 3;
+			    var bgc = colour;
 			    var sendData =  {
 				query: query,
 				key: key,
 				count: count,
 				bgc: bgc
 			    }
-			    console.log(sendData);
-			    $.ajax({
-				crossOrigin: true,
-				url: url,
-				type: "post",
-				contentType: "application/json; charset=UTF-8",
+			    setOptions(query);
+			    // Retrieve image
+			    $.post({
+				url: "/generate",
 				dataType:'json',
-				data: JSON.stringify(sendData),
+				// data: JSON.stringify(sendData),
+				data: sendData,
 				success: function(result){
 				    console.log("SUCCESS", result);
-				    $("#resBlock").html("");
-				    $("#resBlock").append(`<img src="data:image/png;base64,${result}" />`);
+				    $("#imgBlock").html("");
+				    $("#imgBlock").append(`<img src="${result['prefix']} ${result['img']}" />`);
 				}
 			    });
 			}
 
-			// Handle API
-			$("#subbtn").on("click", () => {sendAPI("/generate")});
+			grabImage();
+
 		})
 	</script>
     </body>
