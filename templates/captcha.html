@@ -34,7 +34,6 @@
 					    <img src="https://wpamelia.com/wp-content/uploads/2018/11/ezgif-2-6d0b072c3d3f.gif" />
 				    </div>
                                     <div class="card-body">
-                                        <form action="/generate" method="POST">
                                             <div class="form-row">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
@@ -52,14 +51,14 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <button class="btn btn-primary btn-block" id="opt3">Select C</button>
+                                                        <button type="button" class="btn btn-primary btn-block" id="opt3">Select C</button>
                                                        <!-- <label class="small mb-1" for="inputFirstName">ENTER QUERY</label>
                                                         <input class="form-control py-4" id="query" name="query" type="text" placeholder="Enter query eg:happy" />-->
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <button class="btn btn-primary btn-block" id="opt4">Select D</button>
+                                                        <button type="button" class="btn btn-primary btn-block" id="opt4">Select D</button>
                                                        <!-- <label class="small mb-1" for="inputFirstName">ENTER QUERY</label>
                                                         <input class="form-control py-4" id="query" name="query" type="text" placeholder="Enter query eg:happy" />-->
                                                     </div>
@@ -80,7 +79,6 @@
                                             </div>
 					    <div class="form-group mt-4 mb-0"><a class="btn btn-primary btn-block" id="subbtn">SUBMIT</a></div>
                                             <div class="form-group mt-4 mb-0"><button class="btn btn-primary btn-block">SUBMIT</button></div>
-                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -126,9 +124,11 @@
 				}
 				// Filling options
 				$(`#opt${c_opt}`).text(answer);
+				$(`#opt${c_opt}`).attr("onclick","alert('CAPTCHA PASSED!')");
 				for (let i=1; i<=4; i++) {
 					if (i != c_opt) {
 						$(`#opt${i}`).text(false_ans.pop());
+						$(`#opt${i}`).attr("onclick","alert('CAPTCHA FAILED')");
 					}
 				}
 			}
