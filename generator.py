@@ -56,9 +56,13 @@ def generate_coll(query, count, colour=None):
     )
 
     # Number of images in collage
+    choices =[] #To make sure that there are no repetitions
     for _ in range(count):
         response = r.json().get('items')
         choice = random.choice(response)
+        while choice in choices:
+            choice = random.choice(response)
+        choices.append(choice)
         url = choice.get('link')
 
         imgreq = Request(url,headers=headers)
