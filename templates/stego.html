@@ -30,9 +30,15 @@
                         <div class="row justify-content-center">
                             <div class="col-lg-7">
                                 <div class="card shadow-lg border-0 rounded-lg mt-5">
-                                    <div class="card-header"><h3 class="text-center font-weight-light my-4">MOOD BOARD</h3></div>
+                                    <div class="card-header"><h3 class="text-center font-weight-light my-4">STEGANOGRAPHY</h3></div>
                                     <div class="card-body">
                                         <form>
+                                            <div class="form-row">
+                                                <div class="col-md-12">
+							<h3>Encode</h3>
+							<hr>
+						</div>
+					   </div>
                                             <div class="form-row">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
@@ -44,6 +50,14 @@
                                                     <div class="form-group">
                                                         <label class="small mb-1" for="inputLastName">ENTER API KEY</label>
                                                         <input class="form-control py-4" id="key" name="key" type="text" placeholder="Enter key" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label class="small mb-1" for="inputFirstName">TEXT TO ENCODE</label>
+                                                        <input class="form-control py-4" id="stegotext" name="stegotext" type="text" placeholder="Enter text to encode..." />
                                                     </div>
                                                 </div>
                                             </div>
@@ -60,9 +74,26 @@
                                                     </div>
                                                 </div>
                                             </div>
-					    <!--<div class="form-group mt-4 mb-0"><a class="btn btn-primary btn-block" id="subbtn">SUBMIT</a></div>-->
-                                            <div class="form-group mt-4 mb-0"><button id="subbtn" type="button" class="btn btn-primary btn-block">SUBMIT</button></div>
-                                        </form>
+                                            <div class="form-group mt-4 mb-0"><button id="subbtn" type="button" class="btn btn-primary btn-block">ENCODE</button></div>
+					</form>
+					<br>
+					<form>
+                                            <div class="form-row">
+                                                <div class="col-md-12">
+							<h3>Decode</h3>
+							<hr>
+						</div>
+					   </div>
+                                            <div class="form-row">
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+							    <label class="small mb-1" for="inputPassword">Image with encoded text</label><br>
+							<input type="file" id="img" name="img" accept="image/*">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group mt-4 mb-0"><button id="decbtn" type="button" class="btn btn-primary btn-block">DECODE</button></div>
+					</form>
                                     </div>
                                 </div>
                             </div>
@@ -96,11 +127,13 @@
 		$(document).ready(function(){
 			function sendAPI(url) {
 			    var query = $('#query').val();
+			    var stegotext = $('#stegotext').val();
 			    var key = $('#key').val();
 			    var count = $('#count').val();
 			    var bgc = $('#bgc').val();
 			    var sendData =  {
 				query: query,
+			        stegotext: stegotext,
 				key: key,
 				count: count,
 				bgc: bgc
@@ -118,8 +151,28 @@
 			    });
 			}
 
+			function sendAPI_destego(url) {
+		            var sendData = new FormData();
+			    jQuery.each(jQuery('#img')[0].files, function(i, file) {
+				    sendData.append('file-'+i, file);
+			    });
+			    console.log(sendData);
+			    $.post({
+				url: url,
+				data:sendData,
+			        processData: false,
+			        contentType: false,
+				success: function(result){
+				    console.log("SUCCESS", result);
+				    $("#resBlock").html("");
+				    $("#resBlock").append(`<h2><span style='color:'>Decoded Text ="${result['decoded']}"</span></h2>`);
+				}
+			    });
+			}
+
 			// Handle API
-			$("#subbtn").on("click", () => {sendAPI("/generate")});
+			$("#subbtn").on("click", () => {sendAPI("/genstego")});
+			$("#decbtn").on("click", () => {sendAPI_destego("/destego")});
 		})
 	</script>
     </body>

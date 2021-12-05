@@ -75,10 +75,10 @@ def generate_coll(query, count, colour=None):
     # clg = createCollage(img,size,(randint(0,255),randint(0,255),randint(0,255)))
     clg = createCollage(img,size,colour)
     # clg.show()
-    filename = f"{uuid4().hex}.jpg"
+    filename = f"{uuid4().hex}.png"
     buffered = BytesIO()
     clg.save(f'./static/outputs/{filename}')
-    clg.save(buffered, format='JPEG')
+    clg.save(buffered, format='PNG')
     b64_bytes = base64.b64encode(buffered.getvalue())
     b64_str = b64_bytes.decode('ascii')
 
