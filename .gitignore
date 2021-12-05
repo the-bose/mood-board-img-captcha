@@ -3,3 +3,6 @@ src/
 tests/
 __pycache__/
 static/outputs/*.jpg
+static/outputs/*.png
+static/inputs/*.jpg
+static/inputs/*.png
